@@ -45,22 +45,22 @@
       attribution: '© KLHK',
       maxZoom: 20
     });
-
+    // "Penutupan Lahan 2020"
     var penutupanLahan2020 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Penutupan_Lahan_2020/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
-
-    var dunekalks/PL_AR_250K = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PL2024_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+    // "Penutupan Lahan 2024"
+    var dunekalks = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PL2024_AR_250K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
-
-    var aftjdcsvjvs/MANGROVE_AR_25K = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/MANGROVE_AR_25K_2024/MapServer/tile/{z}/{y}/{x}', {
+    // "Mangrove 2024"
+    var aftjdcsvjvs = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/MANGROVE_AR_25K_2024/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
-
+    // "Kawasan Hutan 2024"
     var jsdgejawfvrdtasdt/KWS_HUTAN = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/KWSHUTAN_AR_250K_072024/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
@@ -73,11 +73,11 @@
 
     var overlayMaps = {
       "Kawasan Hutan": kawasanHutan,
-      "PIPPIB 2025": pippib2025,
+      "PIPPIB 2025": dbjvcbsyfs,
       "Penutupan Lahan 2020": penutupanLahan2020,
-      "Penutupan Lahan 2024": pl2024,
-      "Mangrove 2024": mangrove2024,
-      "Kawasan Hutan 2024": kawasanHutan2024
+      "Penutupan Lahan 2024":dunekalks,
+      "Mangrove 2024": aftjdcsvjvs,
+      "Kawasan Hutan 2024": jsdgejawfvrdtasdt
     };
 
     L.control.layers(baseMaps, overlayMaps, {
