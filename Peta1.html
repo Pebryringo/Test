@@ -41,27 +41,32 @@
       maxZoom: 20
     });
 
-    var dbjvcbsyfs/PIPPIB_AR_250K = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PIPPIB_AR_250K_2025_1/MapServer/tile/{z}/{y}/{x}', {
+    // "Kawasan Hutan 2024"
+    var pippibLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dbjvcbsyfs/PIPPIB_AR_250K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
+
     // "Penutupan Lahan 2020"
     var penutupanLahan2020 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Penutupan_Lahan_2020/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
+
     // "Penutupan Lahan 2024"
-    var dunekalks = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PL2024_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+    var plLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dunekalks/PL_AR_250K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
+
     // "Mangrove 2024"
-    var aftjdcsvjvs = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/MANGROVE_AR_25K_2024/MapServer/tile/{z}/{y}/{x}', {
+    var mangroveLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/aftjdcsvjvs/MANGROVE_AR_25K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
+
     // "Kawasan Hutan 2024"
-    var jsdgejawfvrdtasdt/KWS_HUTAN = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/KWSHUTAN_AR_250K_072024/MapServer/tile/{z}/{y}/{x}', {
+    var kawasanHutanLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
@@ -72,12 +77,12 @@
     };
 
     var overlayMaps = {
-      "Kawasan Hutan": kawasanHutan,
-      "PIPPIB 2025": dbjvcbsyfs,
+      "Kawasan Hutan 2021": kawasanHutan,
+      "PIPPIB 2025": pippibLayer,
       "Penutupan Lahan 2020": penutupanLahan2020,
-      "Penutupan Lahan 2024":dunekalks,
-      "Mangrove 2024": aftjdcsvjvs,
-      "Kawasan Hutan 2024": jsdgejawfvrdtasdt
+      "Penutupan Lahan 2024":plLayer,
+      "Mangrove 2024": mangroveLayer,
+      "Kawasan Hutan 2024": kawasanHutanLayer
     };
 
     L.control.layers(baseMaps, overlayMaps, {
