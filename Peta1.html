@@ -35,19 +35,49 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    // Layer overlay Kawasan Hutan (MapService Tiled)
+    // Layer-layer overlay dari SIGAP Interaktif
     var kawasanHutan = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Kawasan_Hutan/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // Control layer
+    var pippib2025 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PIPPIB_AR_250K_2025_1/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    var penutupanLahan2020 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Penutupan_Lahan_2020/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    var pl2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/PL2024_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    var mangrove2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/MANGROVE_AR_25K_2024/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    var kawasanHutan2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/KWSHUTAN_AR_250K_072024/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    // Kontrol layer
     var baseMaps = {
       "OpenStreetMap": osm
     };
 
     var overlayMaps = {
-      "Kawasan Hutan": kawasanHutan
+      "Kawasan Hutan": kawasanHutan,
+      "PIPPIB 2025": pippib2025,
+      "Penutupan Lahan 2020": penutupanLahan2020,
+      "Penutupan Lahan 2024": pl2024,
+      "Mangrove 2024": mangrove2024,
+      "Kawasan Hutan 2024": kawasanHutan2024
     };
 
     L.control.layers(baseMaps, overlayMaps, {
@@ -55,12 +85,12 @@
       position: 'topright'
     }).addTo(map);
 
-    // Tambahkan legenda (kustom)
+    // Tambahkan legenda kustom
     var legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'legend');
-      div.innerHTML += "<h4>Legenda Kawasan Hutan</h4>";
+      div.innerHTML += "<h4>Legenda Kawasan</h4>";
       div.innerHTML += "<i style='background: green; width: 12px; height: 12px; display: inline-block; margin-right: 5px;'></i> Kawasan Hutan<br>";
       div.innerHTML += "<small>Sumber: KLHK (SIGAP Interaktif)</small>";
       return div;
