@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Peta Kawasan Hutan - KLHK</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map { height: 100vh; width: 100vw; }
+    .legend {
+      background: white;
+      padding: 10px;
+      line-height: 1.4em;
+      font-size: 14px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.4);
+    }
+    .legend h4 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Inisialisasi peta
+    var map = L.map('map').setView([-2.5, 117], 5);
+
+    // Basemap
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Layer overlay Kawasan Hutan (MapService Tiled)
+    var kawasanHutan = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Kawasan_Hutan/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
+    // Control layer
+    var baseMaps = {
+      "OpenStreetMap": osm
+    };
+
+    var overlayMaps = {
+      "Kawasan Hutan": kawasanHutan
+    };
+
+    L.control.layers(baseMaps, overlayMaps, {
+      collapsed: false,
+      position: 'topright'
+    }).addTo(map);
+
+    // Tambahkan legenda (kustom)
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'legend');
+      div.innerHTML += "<h4>Legenda Kawasan Hutan</h4>";
+      div.innerHTML += "<i style='background: green; width: 12px; height: 12px; display: inline-block; margin-right: 5px;'></i> Kawasan Hutan<br>";
+      div.innerHTML += "<small>Sumber: KLHK (SIGAP Interaktif)</small>";
+      return div;
+    };
+
+    legend.addTo(map);
+  </script>
+</body>
+</html>
