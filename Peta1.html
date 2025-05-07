@@ -71,6 +71,12 @@
       maxZoom: 20
     });
 
+    // "Batas KABKOT 2023"
+    var administrasiKabKotaLayer = L.esri.dynamicMapLayer({url: 'https://geoservices.big.go.id/rbi/rest/services/BATASWILAYAH/Administrasi_AR_KabKota_50K/MapServer',
+      attribution: '© BIG',
+      opacity: 0.7
+    });
+
     // Kontrol layer
     var baseMaps = {
       "OpenStreetMap": osm
@@ -82,7 +88,9 @@
       "Penutupan Lahan 2020": penutupanLahan2020,
       "Penutupan Lahan 2024":plLayer,
       "Mangrove 2024": mangroveLayer,
-      "Kawasan Hutan 2024": kawasanHutanLayer
+      "Kawasan Hutan 2024": kawasanHutanLayer,
+      "Batas KABKOT 2023": administrasiKabKotaLayer
+
     };
 
     L.control.layers(baseMaps, overlayMaps, {
