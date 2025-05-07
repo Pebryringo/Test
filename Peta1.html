@@ -1,13 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Peta Kawasan Hutan - KLHK</title>
   <meta charset="utf-8" />
+  <title>Peta Kawasan Hutan & Batas Administrasi</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    #map { height: 100vh; width: 100vw; }
+    html, body, #map {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
     .legend {
       background: white;
       padding: 10px;
@@ -27,71 +33,67 @@
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+
   <script>
     // Inisialisasi peta
     var map = L.map('map').setView([-2.5, 117], 5);
 
-    // Basemap
+    // Basemap OSM
     var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
+      attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Layer-layer overlay dari SIGAP Interaktif
-    var kawasanHutan = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Kawasan_Hutan/MapServer/tile/{z}/{y}/{x}', {
+    // Layer dari KLHK (tile cached)
+    var kawasanHutan2021 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Kawasan_Hutan/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // "Kawasan Hutan 2024"
-    var pippibLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dbjvcbsyfs/PIPPIB_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+    var kawasanHutan2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // "Penutupan Lahan 2020"
+    var pippib2025 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dbjvcbsyfs/PIPPIB_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+      attribution: '© KLHK',
+      maxZoom: 20
+    });
+
     var penutupanLahan2020 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/SIGAP_Interaktif/Penutupan_Lahan_2020/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // "Penutupan Lahan 2024"
-    var plLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dunekalks/PL_AR_250K/MapServer/tile/{z}/{y}/{x}', {
+    var penutupanLahan2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/dunekalks/PL_AR_250K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // "Mangrove 2024"
-    var mangroveLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/aftjdcsvjvs/MANGROVE_AR_25K/MapServer/tile/{z}/{y}/{x}', {
+    var mangrove2024 = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/aftjdcsvjvs/MANGROVE_AR_25K/MapServer/tile/{z}/{y}/{x}', {
       attribution: '© KLHK',
       maxZoom: 20
     });
 
-    // "Kawasan Hutan 2024"
-    var kawasanHutanLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/tile/{z}/{y}/{x}', {
-      attribution: '© KLHK',
-      maxZoom: 20
-    });
-
-    // "Batas KABKOT 2023"
-    var administrasiKabKotaLayer = L.esri.dynamicMapLayer({url: 'https://geoservices.big.go.id/rbi/rest/services/BATASWILAYAH/Administrasi_AR_KabKota_50K/MapServer',
+    // Layer Administrasi Kabupaten/Kota (non-cached Map Service)
+    var administrasiKabKota = L.esri.dynamicMapLayer({
+      url: 'https://geoservices.big.go.id/rbi/rest/services/BATASWILAYAH/Administrasi_AR_KabKota_50K/MapServer',
       attribution: '© BIG',
       opacity: 0.7
-    });
+    }).addTo(map); // Ditambahkan langsung agar tampil di atas
 
-    // Kontrol layer
+    // Layer control
     var baseMaps = {
       "OpenStreetMap": osm
     };
 
     var overlayMaps = {
-      "Kawasan Hutan 2021": kawasanHutan,
-      "PIPPIB 2025": pippibLayer,
-      "Penutupan Lahan 2020": penutupanLahan2020,
-      "Penutupan Lahan 2024":plLayer,
-      "Mangrove 2024": mangroveLayer,
-      "Kawasan Hutan 2024": kawasanHutanLayer,
-      "Batas KABKOT 2023": administrasiKabKotaLayer
-
+      "Kawasan Hutan (SIGAP 2021)": kawasanHutan2021,
+      "Kawasan Hutan (KLHK 2024)": kawasanHutan2024,
+      "PIPPIB (2025)": pippib2025,
+      "Penutupan Lahan (2020)": penutupanLahan2020,
+      "Penutupan Lahan (2024)": penutupanLahan2024,
+      "Mangrove (2024)": mangrove2024,
+      "Batas Administrasi Kab/Kota (2023)": administrasiKabKota
     };
 
     L.control.layers(baseMaps, overlayMaps, {
@@ -99,17 +101,16 @@
       position: 'topright'
     }).addTo(map);
 
-    // Tambahkan legenda kustom
+    // Legenda Kustom
     var legend = L.control({position: 'bottomright'});
-
     legend.onAdd = function (map) {
       var div = L.DomUtil.create('div', 'legend');
       div.innerHTML += "<h4>Legenda Kawasan</h4>";
       div.innerHTML += "<i style='background: green; width: 12px; height: 12px; display: inline-block; margin-right: 5px;'></i> Kawasan Hutan<br>";
-      div.innerHTML += "<small>Sumber: KLHK (SIGAP Interaktif)</small>";
+      div.innerHTML += "<i style='background: blue; width: 12px; height: 12px; display: inline-block; margin-right: 5px;'></i> Batas Administrasi<br>";
+      div.innerHTML += "<small>Sumber: KLHK & BIG</small>";
       return div;
     };
-
     legend.addTo(map);
   </script>
 </body>
