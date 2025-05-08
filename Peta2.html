@@ -3,44 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPERA L3 Disturbance Alert - Leaflet WebGIS</title>
+    <title>Tree Loss 2020-2023 WebGIS</title>
+    
+    <!-- Link to Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    
+    <!-- Link to Earth Engine API -->
+    <script src="https://cdn.jsdelivr.net/npm/@google/earthengine@0.1.2/dist/bundle.js"></script>
+
+    <!-- Link to Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
     <style>
+        /* Set the map size */
         #map {
-            width: 100%;
             height: 100vh;
+            width: 100%;
         }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/georaster-layer-for-leaflet@latest/dist/GeoRasterLayer.js"></script>
 
     <script>
-        // Inisialisasi peta dengan Leaflet
-        var map = L.map('map').setView([0, 0], 2); // Lokasi default (0, 0) dan zoom level 2
-
-        // Tambahkan Tile OpenStreetMap
+        // Menginisialisasi peta Leaflet
+        var map = L.map('map').setView([0, 0], 2); // Peta terpusat pada koordinat lat, lon (0, 0) dengan zoom level 2
+        
+        // Menambahkan layer dasar peta menggunakan OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        /// URL Proxy (gunakan dengan hati-hati, atau buat server proxy sendiri)
-var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-var cogUrl = 'https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-public/OPERA_L3_DIST-ALERT-HLS_V1/OPERA_L3_DIST-ALERT-HLS_T59VNJ_20240304T235611Z_20240306T222423Z_S2A_30_v1/OPERA_L3_DIST-ALERT-HLS_T59VNJ_20240304T235611Z_20240306T222423Z_S2A_30_v1_VEG-DIST-STATUS.tif';
+        // Inisialisasi Earth Engine API
+        ee.Initialize();
 
-fetch(proxyUrl + cogUrl)
-    .then(response => response.arrayBuffer())
-    .then(buffer => {
-        var geoRaster = new GeoRasterLayer({
-            geoRaster: buffer
-        }).addTo(map);
+        // Mendefinisikan ID aset yang telah diekspor sebelumnya
+        var treeLoss2020 = ee.Image('users/your_username/treeLoss2020');
+        var treeLoss2021 = ee.Image('users/your_username/treeLoss2021');
+        var treeLoss2022 = ee.Image('users/your_username/treeLoss2022');
+        var treeLoss2023 = ee.Image('users/your_username/treeLoss2023');
 
-        map.fitBounds(geoRaster.getBounds()); // Sesuaikan batas peta dengan layer
-    })
-    .catch(error => console.error('Error loading COG:', error));
+        // Fungsi untuk menambahkan layer loss tree ke peta menggunakan Leaflet
+        function addTreeLossLayer(eeImage, year, palette) {
+            // Membuat visualisasi untuk image
+            var visParams = {
+                min: 0,
+                max: 1,
+                palette: palette
+            };
+
+            // Mengonversi data Earth Engine Image menjadi Leaflet layer
+            var layer = eeImage.visualize(visParams);
+
+            // Menambahkan layer ke peta menggunakan Leaflet
+            var leafletLayer = new ee.layers.TileLayer(layer, {
+                attribution: 'Earth Engine',
+                opacity: 0.7
+            });
+
+            // Menambahkan layer ke map dengan nama
+            leafletLayer.addTo(map);
+        }
+
+        // Menambahkan layer tree loss untuk tahun 2020-2023
+        addTreeLossLayer(treeLoss2020, 2020, ['black', 'red']);
+        addTreeLossLayer(treeLoss2021, 2021, ['black', 'green']);
+        addTreeLossLayer(treeLoss2022, 2022, ['black', 'blue']);
+        addTreeLossLayer(treeLoss2023, 2023, ['black', 'yellow']);
+
+        // Menambahkan kontrol layer
+        var baseLayers = {
+            "Tree Loss 2020": treeLoss2020,
+            "Tree Loss 2021": treeLoss2021,
+            "Tree Loss 2022": treeLoss2022,
+            "Tree Loss 2023": treeLoss2023
+        };
+
+        // Fungsi untuk membuat kontrol layer
+        L.control.layers(baseLayers).addTo(map);
     </script>
 </body>
 </html>
