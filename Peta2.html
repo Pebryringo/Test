@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGIS Example</title>
+    <title>WebGIS Example with GeoTIFF</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script src="https://unpkg.com/geotiff/dist/geotiff.bundle.js"></script>
@@ -30,7 +30,6 @@
                     const rasters = image.readRasters();
 
                     // Menggunakan rasters untuk menambah layer di peta
-                    // Di sini, Anda bisa menyesuaikan cara ini tergantung pada data dan format GeoTIFF
                     const bounds = image.getBoundingBox();
                     const tiffLayer = L.imageOverlay(
                         image.getData(),
@@ -43,11 +42,21 @@
                 .catch(err => console.error('Error loading GeoTIFF:', err));
         }
 
-        // Menambahkan berbagai layer GeoTIFF dari URL yang disediakan
-        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Africa_2001_primary.tif');
-        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Asia_2001_primary.tif');
-        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Madagsacar_2001_primary.tif');
-        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/SouthAmerica_2001_primary.tif');
+        // Menambahkan layer GeoTIFF dari URL yang di-host di GitHub
+        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Africa_2001_primary.tif');
+        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Asia_2001_primary.tif');
+        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Madagascar_2001_primary.tif');
+        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/SouthAmerica_2001_primary.tif');
+
+var overlayMaps = {
+    "Africa": africaLayer,
+    "Asia": asiaLayer,
+    "Madagascar": madagascarLayer,
+    "South America": southAmericaLayer
+};
+
+L.control.layers(null, overlayMaps).addTo(map);
+
     </script>
 </body>
 </html>
