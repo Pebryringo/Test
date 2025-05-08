@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGIS Example</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/geotiff/dist/geotiff.bundle.js"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+
+    <script>
+        // Membuat peta menggunakan Leaflet
+        var map = L.map('map').setView([0, 0], 2);  // Sesuaikan dengan koordinat dan zoom level Anda
+
+        // Menambahkan tile layer dasar (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Fungsi untuk menambahkan layer GeoTIFF
+        function addGeoTiffLayer(url) {
+            fetch(url)
+                .then(response => response.arrayBuffer())
+                .then(data => {
+                    const tiff = GeoTIFF.parse(data);
+                    const image = tiff.getImage();
+                    const rasters = image.readRasters();
+
+                    // Menggunakan rasters untuk menambah layer di peta
+                    // Di sini, Anda bisa menyesuaikan cara ini tergantung pada data dan format GeoTIFF
+                    const bounds = image.getBoundingBox();
+                    const tiffLayer = L.imageOverlay(
+                        image.getData(),
+                        bounds,
+                        {
+                            opacity: 0.6
+                        }
+                    ).addTo(map);
+                })
+                .catch(err => console.error('Error loading GeoTIFF:', err));
+        }
+
+        // Menambahkan berbagai layer GeoTIFF dari URL yang disediakan
+        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Africa_2001_primary.tif');
+        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Asia_2001_primary.tif');
+        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/Madagsacar_2001_primary.tif');
+        addGeoTiffLayer('https://glad.umd.edu/sites/default/files/SouthAmerica_2001_primary.tif');
+    </script>
+</body>
+</html>
