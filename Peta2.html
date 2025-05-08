@@ -3,60 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGIS Example with GeoTIFF</title>
+    <title>OPERA L3 Disturbance Alert - Leaflet WebGIS</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/geotiff/dist/geotiff.bundle.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 600px;"></div>
+    <div id="map"></div>
+    
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/georaster-layer-for-leaflet@latest/dist/GeoRasterLayer.js"></script>
 
     <script>
-        // Membuat peta menggunakan Leaflet
-        var map = L.map('map').setView([0, 0], 2);  // Sesuaikan dengan koordinat dan zoom level Anda
+        // Inisialisasi peta dengan Leaflet
+        var map = L.map('map').setView([0, 0], 2); // Lokasi default (0, 0) dan zoom level 2
 
-        // Menambahkan tile layer dasar (OpenStreetMap)
+        // Tambahkan Tile OpenStreetMap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        // Fungsi untuk menambahkan layer GeoTIFF
-        function addGeoTiffLayer(url) {
-            fetch(url)
-                .then(response => response.arrayBuffer())
-                .then(data => {
-                    const tiff = GeoTIFF.parse(data);
-                    const image = tiff.getImage();
-                    const rasters = image.readRasters();
+        // URL COG untuk Layer OPERA_L3_DIST-ALERT-HLS (ganti dengan URL yang sesuai)
+        var cogUrl = 'https://data.lpdaac.earthdatacloud.nasa.gov/lp-prod-public/OPERA_L3_DIST-ALERT-HLS_V1/OPERA_L3_DIST-ALERT-HLS_T59VNJ_20240304T235611Z_20240306T222423Z_S2A_30_v1/OPERA_L3_DIST-ALERT-HLS_T59VNJ_20240304T235611Z_20240306T222423Z_S2A_30_v1_VEG-DIST-STATUS.tif';
 
-                    // Menggunakan rasters untuk menambah layer di peta
-                    const bounds = image.getBoundingBox();
-                    const tiffLayer = L.imageOverlay(
-                        image.getData(),
-                        bounds,
-                        {
-                            opacity: 0.6
-                        }
-                    ).addTo(map);
-                })
-                .catch(err => console.error('Error loading GeoTIFF:', err));
-        }
+        // Muat data COG dan tampilkan pada peta
+        fetch(cogUrl)
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                var geoRaster = new GeoRasterLayer({
+                    geoRaster: buffer
+                }).addTo(map);
 
-        // Menambahkan layer GeoTIFF dari URL yang di-host di GitHub
-        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Africa_2001_primary.tif');
-        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Asia_2001_primary.tif');
-        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/Madagascar_2001_primary.tif');
-        addGeoTiffLayer('https://raw.githubusercontent.com/pebryringo/webgis-geoTIFF/main/data/SouthAmerica_2001_primary.tif');
-
-var overlayMaps = {
-    "Africa": africaLayer,
-    "Asia": asiaLayer,
-    "Madagascar": madagascarLayer,
-    "South America": southAmericaLayer
-};
-
-L.control.layers(null, overlayMaps).addTo(map);
-
+                map.fitBounds(geoRaster.getBounds()); // Sesuaikan batas peta dengan layer
+            })
+            .catch(error => console.error('Error loading COG:', error));
     </script>
 </body>
 </html>
